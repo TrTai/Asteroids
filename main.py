@@ -14,29 +14,33 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
+
     updateable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
+
     Asteroid.containers = (asteroids, updateable, drawable)
     Player.containers = (updateable, drawable)
     AsteroidField.containers = (updateable)
-    Shot.containters = (updateable, drawable)
+    Shot.containters = (shots, updateable, drawable)
+
     NewField = AsteroidField()
-    Player1 = Player(x = SCREEN_WIDTH/2, y=SCREEN_HEIGHT/2)
-    gostatus = False
+    player1 = Player(x = SCREEN_WIDTH/2, y=SCREEN_HEIGHT/2)
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        updateable.update(dt)
+
         pygame.Surface.fill(screen, (0, 0, 0))
+        updateable.update(dt)
+
         for draws in drawable:
             draws.draw(screen)
-        for possible in asteroids:
-            gostatus = Player1.collisionDetection(possible)
-            if gostatus == True:
+
+        for possibleCollisions in asteroids:
+            if player1.collisionDetection(possibleCollisions) == True:
                 print("Game Over!")
                 pygame.quit()
                 sys.exit()
